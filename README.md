@@ -19,5 +19,3 @@ The primary method is the `assertEqual` method with the following parameters:
 This method, `assertEqual` is recursive, so it does a deep comparison, and can not handle loops.
 
 
-
-   """
