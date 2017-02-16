@@ -44,7 +44,7 @@ def find_packages(where='.', lib_prefix='', exclude=()):
 
 setup(
     name='mo-testing',
-    version="1.0.17041",
+    version="1.0.17048",
     description='More Testing! Extends the `unittest.TestCase` to provide deep, yet fuzzy, structural comparisons',
     long_description=long_desc,
     author='Kyle Lahnakoski',
