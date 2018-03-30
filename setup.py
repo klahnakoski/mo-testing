@@ -44,7 +44,7 @@ def find_packages(where='.', lib_prefix='', exclude=()):
 
 setup(
     name='mo-testing',
-    version="1.2.18029",
+    version="1.3.18029",
     description='More Testing! Extends the `unittest.TestCase` to provide deep, yet fuzzy, structural comparisons',
     long_description=long_desc,
     author='Kyle Lahnakoski',
@@ -60,5 +60,7 @@ setup(
         "Topic :: Software Development :: Libraries",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 2.7"
     ]
 )
