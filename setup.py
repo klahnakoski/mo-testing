@@ -44,7 +44,7 @@ def find_packages(where='.', lib_prefix='', exclude=()):
 
 setup(
     name='mo-testing',
-    version="1.3.18089",
+    version="2.16.18199",
     description='More Testing! Extends the `unittest.TestCase` to provide deep, yet fuzzy, structural comparisons',
     long_description=long_desc,
     author='Kyle Lahnakoski',
@@ -52,7 +52,7 @@ setup(
     url='https://github.com/klahnakoski/mo-testing',
     license='MPL 2.0',
     packages=find_packages(".", lib_prefix=""),
-    install_requires=["mo-collections>=1.2.18029","mo-dots","mo-future","mo-logs","mo-math>=1.2"],
+    install_requires=["mo-collections>=2.16.18199","mo-dots>=2.7.18148","mo-future>=2.3.18147","mo-logs>=2.16.18199","mo-math>=2.16.18199"],
     include_package_data=True,
     zip_safe=False,
     classifiers=[  #https://pypi.python.org/pypi?%3Aaction=list_classifiers
