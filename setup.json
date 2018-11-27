@@ -1,0 +1,18 @@
+{
+    "name": "mo-testing",
+    "version": "2.18.18240",
+    "description": "More Testing! Extends the `unittest.TestCase` to provide deep, yet fuzzy, structural comparisons",
+    "author": "Kyle Lahnakoski",
+    "author_email": "kyle@lahnakoski.com",
+    "url": "https://github.com/klahnakoski/mo-testing",
+    "license": "MPL 2.0",
+    "include_package_data": true,
+    "classifiers": [
+        "Development Status :: 4 - Beta",
+        "Topic :: Software Development :: Libraries",
+        "Topic :: Software Development :: Libraries :: Python Modules",
+        "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 2.7"
+    ]
+}
