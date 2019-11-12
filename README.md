@@ -16,6 +16,6 @@ The primary method is the `assertEqual` method with the following parameters:
 * `places` - number of significant digits used to compare values for accuracy
 * `delta` - maximum difference between values for them to be equal
 
-This method, `assertEqual` is recursive, so it does a deep comparison, and can not handle loops.
+This method, `assertEqual` is recursive, so it does a deep comparison, and can not handle cycles in the datastructure.
 
 
