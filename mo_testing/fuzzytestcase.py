@@ -14,9 +14,8 @@ import unittest
 
 from mo_collections.unique_index import UniqueIndex
 import mo_dots
-from mo_dots import coalesce, is_container, is_list, literal_field, unwrap, wrap
+from mo_dots import coalesce, is_container, is_list, literal_field, unwrap, wrap, is_data
 from mo_future import is_text, zip_longest
-from mo_json import is_data
 from mo_logs import Except, Log, suppress_exception
 from mo_logs.strings import expand_template
 import mo_math
