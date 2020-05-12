@@ -12,21 +12,19 @@
     "description": "More Testing! Extends the `unittest.TestCase` to provide deep, yet fuzzy, structural comparisons",
     "include_package_data": true,
     "install_requires": [
-        "mo-collections>=3.58.20089",        "mo-dots>=3.53.20059",
-             "mo-future>=3.51.20059",        "mo-logs>=3.57.20089",
-               "mo-math>=3.57.20089"
+        "mo-collections>=3.60.20091",        "mo-dots>=3.63.20108",
+             "mo-future>=3.51.20059",        "mo-logs>=3.66.20113",
+               "mo-math>=3.69.20133"
     ],
     "license": "MPL 2.0",
     "long_description": {
         "$concat": [
-            "Mo' Testing",
-            "===========",
+            "# More Testing",
             "",
             "`FuzzyTestCase` extends the `unittest.TestCase` to provide deep, yet fuzzy, structural comparisons; intended for use in test cases dealing with JSON.",
             "",
             "",
-            "Details",
-            "-------",
+            "## Details",
             "",
             "The primary method is the `assertEqual` method with the following parameters:",
             "",
@@ -37,7 +35,7 @@
             "* `places` - number of significant digits used to compare values for accuracy",
             "* `delta` - maximum difference between values for them to be equal",
             "",
-            "This method, `assertEqual` is recursive, so it does a deep comparison, and can not handle cycles in the datastructure.",
+            "This method `assertEqual` is recursive; it does a deep comparison; it can not handle cycles in the data structure.",
             "",
             "",
             ""
@@ -48,5 +46,5 @@
     "name": "mo-testing",
     "packages": ["mo_testing"],
     "url": "https://github.com/klahnakoski/mo-testing",
-    "version": "3.58.20089"
+    "version": "3.69.20133"
 }
