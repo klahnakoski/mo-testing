@@ -1,11 +1,9 @@
-Mo' Testing
-===========
+# More Testing
 
 `FuzzyTestCase` extends the `unittest.TestCase` to provide deep, yet fuzzy, structural comparisons; intended for use in test cases dealing with JSON.
 
 
-Details
--------
+## Details
 
 The primary method is the `assertEqual` method with the following parameters:
 
@@ -16,6 +14,6 @@ The primary method is the `assertEqual` method with the following parameters:
 * `places` - number of significant digits used to compare values for accuracy
 * `delta` - maximum difference between values for them to be equal
 
-This method, `assertEqual` is recursive, so it does a deep comparison, and can not handle cycles in the datastructure.
+This method `assertEqual` is recursive; it does a deep comparison; it can not handle cycles in the data structure.
 
 
