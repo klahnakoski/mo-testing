@@ -57,9 +57,9 @@ class FuzzyTestCase(unittest.TestCase):
     def assertEqual(self, test_value, expected, msg=None, digits=None, places=None, delta=None):
         self.assertAlmostEqual(test_value, expected, msg=msg, digits=digits, places=places, delta=delta)
 
-    def assertRaises(self, problem, function=None, *args, **kwargs):
+    def assertRaises(self, problem=None, function=None, *args, **kwargs):
         if function is None:
-            return RaiseContext(self, problem)
+            return RaiseContext(self, problem=problem or Exception)
 
         try:
             function(*args, **kwargs)
@@ -139,10 +139,14 @@ def assertAlmostEqual(test, expected, digits=None, places=None, msg=None, delta=
                     Log.error("Expecting data, not a list")
                 test = test[0]
             for k, e in expected.items():
-                if is_text(k):
-                    t = mo_dots.get_attr(test, literal_field(k))
-                else:
+                try:
                     t = test[k]
+                    assertAlmostEqual(t, e, msg=msg, digits=digits, places=places, delta=delta)
+                    continue
+                except:
+                    pass
+
+                t = mo_dots.get_attr(test, literal_field(k))
                 assertAlmostEqual(t, e, msg=msg, digits=digits, places=places, delta=delta)
         elif is_container(test) and isinstance(expected, set):
             test = set(to_data(t) for t in test)
@@ -183,12 +187,12 @@ def assertAlmostEqual(test, expected, digits=None, places=None, msg=None, delta=
                 assertAlmostEqual(t, e, msg=msg, digits=digits, places=places, delta=delta)
         else:
             assertAlmostEqualValue(test, expected, msg=msg, digits=digits, places=places, delta=delta)
-    except Exception as e:
+    except Exception as cause:
         Log.error(
             "{{test|json|limit(10000)}} does not match expected {{expected|json|limit(10000)}}",
             test=test if show_detail else "[can not show]",
             expected=expected if show_detail else "[can not show]",
-            cause=e
+            cause=cause
         )
 
 
