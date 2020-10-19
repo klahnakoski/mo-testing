@@ -13,8 +13,8 @@
     "include_package_data": true,
     "install_requires": [
         "mo-collections>=3.96.20290",        "mo-dots>=3.93.20259",
-             "mo-future>=3.89.20246",        "mo-logs>=3.99.20292",
-               "mo-math>=3.91.20246"
+             "mo-future>=3.89.20246",       "mo-logs>=3.118.20293",
+               "mo-math>=3.91.20246",    "mo-threads>=3.119.20293"
     ],
     "license": "MPL 2.0",
     "long_description": {
@@ -46,5 +46,5 @@
     "name": "mo-testing",
     "packages": ["mo_testing"],
     "url": "https://github.com/klahnakoski/mo-testing",
-    "version": "3.99.20292"
+    "version": "3.120.20293"
 }
