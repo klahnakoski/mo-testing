@@ -61,31 +61,13 @@ class FuzzyTestCase(unittest.TestCase):
         if function is None:
             return RaiseContext(self, problem=problem or Exception)
 
-        try:
+        with RaiseContext(self, problem=problem):
             function(*args, **kwargs)
-        except Exception as e:
-            if issubclass(problem, BaseException) and isinstance(e, problem):
-                return
-            f = Except.wrap(e)
-            if is_text(problem):
-                if problem in f:
-                    return
-                Log.error(
-                    "expecting an exception returning {{problem|quote}} got something else instead",
-                    problem=problem,
-                    cause=f
-                )
-            elif not isinstance(f, problem) and not isinstance(e, problem):
-                Log.error("expecting an exception of type {{type}} to be raised", type=problem)
-            else:
-                return
-
-        Log.error("Expecting an exception to be raised")
 
 
 class RaiseContext(object):
 
-    def __init__(self, this, problem):
+    def __init__(self, this, problem=Exception):
         self.this = this
         self.problem = problem
 
