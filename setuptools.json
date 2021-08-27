@@ -12,9 +12,9 @@
     "description": "More Testing! Extends the `unittest.TestCase` to provide deep, yet fuzzy, structural comparisons",
     "include_package_data": true,
     "install_requires": [
-        "mo-collections==4.30.21121",        "mo-dots==4.22.21108",
-            "mo-future==3.147.20327",        "mo-logs==4.23.21108",
-               "mo-math==4.23.21108",     "mo-threads==4.33.21121"
+        "mo-collections==5.37.21239",        "mo-dots==5.22.21182",
+             "mo-future==5.17.21182",        "mo-logs==5.23.21182",
+               "mo-math==5.23.21182",     "mo-threads==5.37.21239"
     ],
     "license": "MPL 2.0",
     "long_description": {
@@ -46,5 +46,5 @@
     "name": "mo-testing",
     "packages": ["mo_testing"],
     "url": "https://github.com/klahnakoski/mo-testing",
-    "version": "4.33.21121"
+    "version": "5.37.21239"
 }
