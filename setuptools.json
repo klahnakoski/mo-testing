@@ -10,11 +10,12 @@
         "Programming Language :: Python :: 3.9"
     ],
     "description": "More Testing! Extends the `unittest.TestCase` to provide deep, yet fuzzy, structural comparisons",
+    "extras_require": {"tests": []},
     "include_package_data": true,
     "install_requires": [
-        "mo-collections==5.37.21239",        "mo-dots==5.22.21182",
-             "mo-future==5.17.21182",        "mo-logs==5.23.21182",
-               "mo-math==5.23.21182",     "mo-threads==5.37.21239"
+        "mo-collections==5.45.21241",        "mo-dots==5.22.21182",
+             "mo-future==5.17.21182",        "mo-logs==5.44.21241",
+               "mo-math==5.53.21241",     "mo-threads==5.53.21241"
     ],
     "license": "MPL 2.0",
     "long_description": {
@@ -46,5 +47,5 @@
     "name": "mo-testing",
     "packages": ["mo_testing"],
     "url": "https://github.com/klahnakoski/mo-testing",
-    "version": "5.38.21239"
+    "version": "5.53.21241"
 }
