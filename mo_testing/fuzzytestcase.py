@@ -220,8 +220,6 @@ def assertAlmostEqualValue(test, expected, digits=None, places=None, msg=None, d
             test = dates.parse(test).unix
         except Exception as e:
             raise AssertionError(expand_template("{{test|json}} != {{expected}}", locals()))
-    else:
-        test = float(test)
 
     # WE NOW ASSUME test IS A NUMBER
     test = float(test)
