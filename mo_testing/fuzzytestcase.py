@@ -67,8 +67,8 @@ class FuzzyTestCase(unittest.TestCase):
 
 class RaiseContext(object):
 
-    def __init__(self, this, problem=Exception):
-        self.this = this
+    def __init__(self, testcase, problem=Exception):
+        self.testcase = testcase
         self.problem = problem
 
     def __enter__(self):
@@ -89,7 +89,7 @@ class RaiseContext(object):
             if isinstance(problem, object.__class__) and issubclass(problem, BaseException) and isinstance(exc_val, problem):
                 return True
             try:
-                self.this.assertIn(problem, f)
+                self.testcase.assertIn(problem, f)
                 return True
             except Exception as cause:
                 causes.append(cause)
