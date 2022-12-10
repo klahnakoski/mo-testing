@@ -7,15 +7,16 @@
         "Topic :: Software Development :: Libraries :: Python Modules",
         "License :: OSI Approved :: Mozilla Public License 2.0 (MPL 2.0)",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9"
     ],
     "description": "More Testing! Extends the `unittest.TestCase` to provide deep, yet fuzzy, structural comparisons",
     "extras_require": {"tests": []},
     "include_package_data": true,
     "install_requires": [
-        "mo-collections==5.163.22119",        "mo-dots==9.163.22119",
-               "mo-future==6.2.21303",        "mo-logs==7.163.22119",
-               "mo-math==7.163.22119",     "mo-threads==5.164.22119"
+        "mo-collections==5.292.22344",        "mo-dots==9.279.22339",
+             "mo-future==6.265.22338",        "mo-logs==7.279.22339",
+               "mo-math==7.280.22341",     "mo-threads==5.292.22344"
     ],
     "license": "MPL 2.0",
     "long_description": {
@@ -47,5 +48,5 @@
     "name": "mo-testing",
     "packages": ["mo_testing"],
     "url": "https://github.com/klahnakoski/mo-testing",
-    "version": "5.165.22121"
+    "version": "5.295.22344"
 }
