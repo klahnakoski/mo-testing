@@ -7,16 +7,17 @@
 #
 # Contact: Kyle Lahnakoski (kyle@lahnakoski.com)
 #
-from __future__ import unicode_literals
+
 
 import datetime
 import types
 import unittest
+from unittest import SkipTest
 
 from mo_collections.unique_index import UniqueIndex
 import mo_dots
 from mo_dots import coalesce, is_container, is_list, literal_field, from_data, to_data, is_data, is_many
-from mo_future import is_text, zip_longest, first
+from mo_future import is_text, zip_longest, first, get_function_name
 from mo_logs import Except, Log, suppress_exception
 from mo_logs.strings import expand_template, quote
 import mo_math
@@ -264,3 +265,28 @@ def assertAlmostEqualValue(test, expected, digits=None, places=None, msg=None, d
 
 def is_null_op(v):
     return v.__class__.__name__ == "NullOp"
+
+
+def add_error_reporting(suite):
+    def add_hanlder(function):
+        test_name = get_function_name(function)
+        def error_hanlder(*args, **kwargs):
+            try:
+                return function(*args, **kwargs)
+            except SkipTest as cause:
+                raise cause
+            except Exception as cause:
+                Log.warning(f"{test_name} failed", cause)
+                raise cause
+
+        return error_hanlder
+
+    if not hasattr(suite, "FuzzyTestCase.__modified__"):
+        setattr(suite, "FuzzyTestCase.__modified__", True)
+        # find all methods, and wrap in exceptin handler
+        for name, func in vars(suite).items():
+            if name.startswith("test"):
+                h = add_hanlder(func)
+                h.__name__ = get_function_name(func)
+                setattr(suite, name, h)
+    return suite

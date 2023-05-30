@@ -1,8 +1,9 @@
 from mo_logs import Log
 
-from mo_testing.fuzzytestcase import FuzzyTestCase
+from mo_testing.fuzzytestcase import FuzzyTestCase, add_error_reporting
 
 
+@add_error_reporting
 class Tests(FuzzyTestCase):
 
     def test_raises_w_nothing(self):

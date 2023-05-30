@@ -8,4 +8,7 @@ dist
 *.egg-info
 *.txt
 *.tab
+/
 /setup.py
+
+
