@@ -12,7 +12,7 @@
 import datetime
 import types
 import unittest
-from unittest import SkipTest
+from unittest import SkipTest, TestCase
 
 from mo_collections.unique_index import UniqueIndex
 import mo_dots
@@ -265,6 +265,13 @@ def assertAlmostEqualValue(test, expected, digits=None, places=None, msg=None, d
 
 def is_null_op(v):
     return v.__class__.__name__ == "NullOp"
+
+
+def assertEqual(self, test, expected):
+    return TestCase.assertEqual(self, expected, test)
+
+
+TestCase.assertEqual = assertEqual
 
 
 def add_error_reporting(suite):
