@@ -270,8 +270,8 @@ def is_null_op(v):
 _original_assertEqual = TestCase.assertEqual
 
 
-def assertEqual(self, test, expected):
-    return _original_assertEqual(self, expected, test)
+def assertEqual(self, test, expected, *args, **kwargs):
+    return _original_assertEqual(self, expected, test, *args, **kwargs)
 
 
 TestCase.assertEqual = assertEqual
