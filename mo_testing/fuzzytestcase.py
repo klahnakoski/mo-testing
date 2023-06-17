@@ -267,8 +267,11 @@ def is_null_op(v):
     return v.__class__.__name__ == "NullOp"
 
 
+_original_assertEqual = TestCase.assertEqual
+
+
 def assertEqual(self, test, expected):
-    return TestCase.assertEqual(self, expected, test)
+    return _original_assertEqual(self, expected, test)
 
 
 TestCase.assertEqual = assertEqual
