@@ -8,12 +8,12 @@ setup(
     description='More Testing! Extends the `unittest.TestCase` to provide deep, yet fuzzy, structural comparisons',
     extras_require={"tests":[]},
     include_package_data=True,
-    install_requires=["mo-collections==5.407.23153","mo-dots==9.401.23144","mo-future==7.401.23144","mo-logs==8.407.23153","mo-math==7.403.23150","mo-threads==5.407.23153"],
+    install_requires=["mo-collections==5.412.23165","mo-dots==9.408.23161","mo-future==7.401.23144","mo-logs==8.412.23165","mo-math==7.409.23162","mo-threads==5.413.23168"],
     license='MPL 2.0',
     long_description='# More Testing\n\n`FuzzyTestCase` extends the `unittest.TestCase` to provide deep, yet fuzzy, structural comparisons; intended for use in test cases dealing with JSON.\n\n\n## Details\n\nThe primary method is the `assertEqual` method with the following parameters:\n\n* `test_value` - the value, or structure being tested\n* `expected` - the expected value or structure.  In the case of a number, the accuracy is controlled by the following parameters.  In the case of a structure, only the not-null parameters of `expected` are tested for existence.\n* `msg` - Detailed error message if there is no match\n* `digits` - number of decimal places of accuracy required to consider two values equal\n* `places` - number of significant digits used to compare values for accuracy\n* `delta` - maximum difference between values for them to be equal\n\nThis method `assertEqual` is recursive; it does a deep comparison; it can not handle cycles in the data structure.\n\n\n',
     long_description_content_type='text/markdown',
     name='mo-testing',
     packages=["mo_testing"],
     url='https://github.com/klahnakoski/mo-testing',
-    version='5.407.23153'
+    version='5.413.23168'
 )
