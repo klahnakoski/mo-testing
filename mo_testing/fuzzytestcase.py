@@ -278,7 +278,7 @@ TestCase.assertEqual = assertEqual
 
 
 def add_error_reporting(suite):
-    def add_hanlder(function):
+    def add_handler(function):
         test_name = get_function_name(function)
         def error_hanlder(*args, **kwargs):
             try:
@@ -296,7 +296,7 @@ def add_error_reporting(suite):
         # find all methods, and wrap in exceptin handler
         for name, func in vars(suite).items():
             if name.startswith("test"):
-                h = add_hanlder(func)
+                h = add_handler(func)
                 h.__name__ = get_function_name(func)
                 setattr(suite, name, h)
     return suite
