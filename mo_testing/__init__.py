@@ -9,7 +9,7 @@
 #
 import os
 
-from fuzzytestcase import FuzzyTestCase, assertAlmostEqual
+from mo_testing.fuzzytestcase import FuzzyTestCase, assertAlmostEqual
 
 IS_WINDOWS = os.name == "nt"
 
