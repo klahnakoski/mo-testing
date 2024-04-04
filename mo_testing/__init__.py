@@ -9,7 +9,8 @@
 #
 import os
 
+from fuzzytestcase import FuzzyTestCase, assertAlmostEqual
+
 IS_WINDOWS = os.name == "nt"
 
-
-
+__all__ = ["IS_WINDOWS", "FuzzyTestCase", "assertAlmostEqual"]
