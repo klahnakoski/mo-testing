@@ -113,6 +113,13 @@ class Tests(FuzzyTestCase):
 
         assertAlmostEqual(Temp(1, 3.14), {"a":1, "b": 3.14})
 
+    def test_ok_when_matching2(self):
+        assertAlmostEqual([{"a":1, "b":3.14}], {"a":1, "b": 3.14})
+
+    def test_ok_when_matching3(self):
+        assertAlmostEqual({"a":1, "b":3.14}, [{"a":1, "b": 3.14}])
+
+
     def test_raises_when_not_matching1(self):
         @dataclass
         class Temp:
@@ -130,5 +137,12 @@ class Tests(FuzzyTestCase):
         with self.assertRaises("asdfasdf="):
             assertAlmostEqual(Temp(1), {"a":1, "asdfasdf": 3.14})
 
+    def test_ok_when_ordered(self):
+        assertAlmostEqual([1, 2, 3], [1,2,3])
+
     def test_ok_when_unordered(self):
         assertAlmostEqual([1, 2, 3], {3, 2, 1})
+
+    def test_raises_when_bad_length(self):
+        with self.assertRaises(Exception):
+            assertAlmostEqual([1, 2, 3], {2, 1})

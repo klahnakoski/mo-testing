@@ -123,6 +123,8 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
         elif isinstance(test, UniqueIndex):
             if test ^ expected:
                 Log.error("Sets do not match")
+        elif not is_many(test) and is_list(expected) and len(expected)==1:
+            assertAlmostEqual(test, expected[0], msg=msg, digits=digits, places=places, delta=delta)
         elif is_data(expected) and is_data(test):
             for k, e in from_data(expected).items():
                 t = test.get(k)
