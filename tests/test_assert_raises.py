@@ -78,3 +78,7 @@ class Tests(FuzzyTestCase):
 
     def test_ok_when_same_places4(self):
         assertAlmostEqual(0.0010001, 0.00100016, places=4)
+
+    def test_report_property_name(self):
+        with self.assertRaises("asdfasdf="):
+            assertAlmostEqual({}, {"asdfasdf":0})
