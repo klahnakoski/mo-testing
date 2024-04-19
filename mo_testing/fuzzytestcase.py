@@ -14,10 +14,9 @@ import types
 import unittest
 from unittest import SkipTest, TestCase
 
-import mo_dots
 import mo_math
 from mo_collections.unique_index import UniqueIndex
-from mo_dots import coalesce, is_list, literal_field, from_data, to_data, is_data, is_many
+from mo_dots import coalesce, is_list, literal_field, from_data, to_data, is_data, is_many,is_missing, get_attr
 from mo_future import is_text, zip_longest, first, get_function_name
 from mo_logs import Except, Log, suppress_exception
 from mo_logs.strings import expand_template, quote
@@ -115,9 +114,9 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
     test = from_data(test)
     expected = from_data(expected)
     try:
-        if test is None and (is_null_op(expected) or expected is None):
+        if test is expected:
             return
-        elif test is expected:
+        elif test is None and (is_null_op(expected) or is_missing(expected)):
             return
         elif is_text(expected):
             assertAlmostEqualValue(test, expected, msg=msg, digits=digits, places=places, delta=delta)
@@ -145,15 +144,11 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
                     Log.error("Expecting data, not a list")
                 test = test[0]
             for k, e in expected.items():
+                t = get_attr(test, literal_field(k))
                 try:
-                    t = test[k]
                     assertAlmostEqual(t, e, msg=msg, digits=digits, places=places, delta=delta)
-                    continue
-                except:
-                    pass
-
-                t = mo_dots.get_attr(test, literal_field(k))
-                assertAlmostEqual(t, e, msg=msg, digits=digits, places=places, delta=delta)
+                except Exception as cause:
+                    Log.error("key {k}={t} does not match expected {k}={e}", k=k, t=t, e=e, cause=cause)
         elif is_many(test) and isinstance(expected, set):
             test = set(to_data(t) for t in test)
             if len(test) != len(expected):

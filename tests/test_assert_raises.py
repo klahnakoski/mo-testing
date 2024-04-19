@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 from mo_logs import Log
 
 from mo_testing.fuzzytestcase import FuzzyTestCase, add_error_reporting, assertAlmostEqual
@@ -102,3 +104,28 @@ class Tests(FuzzyTestCase):
 
     def test_ok_when_missing4(self):
         assertAlmostEqual([], [])
+
+    def test_ok_when_matching1(self):
+        @dataclass
+        class Temp:
+            a: int
+            b: float
+
+        assertAlmostEqual(Temp(1, 3.14), {"a":1, "b": 3.14})
+
+    def test_raises_when_not_matching1(self):
+        @dataclass
+        class Temp:
+            a: int
+            b: float
+
+        with self.assertRaises(Exception):
+            assertAlmostEqual(Temp(1, 5.14), {"a":1, "b": 3.14})
+
+    def test_raises_when_not_matching2(self):
+        @dataclass
+        class Temp:
+            a: int
+
+        with self.assertRaises("asdfasdf="):
+            assertAlmostEqual(Temp(1), {"a":1, "asdfasdf": 3.14})
