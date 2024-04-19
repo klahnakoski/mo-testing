@@ -42,13 +42,13 @@ class Tests(FuzzyTestCase):
 
     def test_raises_when_different4(self):
         with self.assertRaises(Exception):
-            assertAlmostEqual(1.000001, 1.0000015, 6)
+            assertAlmostEqual(1.000001, 1.0000015, digits=6)
 
     def test_ok_when_same1(self):
-        assertAlmostEqual(1.000001, 1.0000011, 6)
+        assertAlmostEqual(1.000001, 1.0000011, digits=6)
 
     def test_ok_when_same2(self):
-        assertAlmostEqual(1.000002, 1.0000025, 6)
+        assertAlmostEqual(1.000002, 1.0000025, digits=6)
 
     # tests for number of significant digits (places)
     def test_raises_when_different_places1(self):
@@ -82,3 +82,23 @@ class Tests(FuzzyTestCase):
     def test_report_property_name(self):
         with self.assertRaises("asdfasdf="):
             assertAlmostEqual({}, {"asdfasdf":0})
+
+    def test_raises_when_not_missing2(self):
+        with self.assertRaises(Exception):
+            assertAlmostEqual(0, [])
+
+    def test_raises_when_not_missing3(self):
+        with self.assertRaises(Exception):
+            assertAlmostEqual(False, [])
+
+    def test_ok_when_missing1(self):
+        assertAlmostEqual(None, [])
+
+    def test_ok_when_missing2(self):
+        assertAlmostEqual("", [])
+
+    def test_ok_when_missing3(self):
+        assertAlmostEqual([], [])
+
+    def test_ok_when_missing4(self):
+        assertAlmostEqual([], [])

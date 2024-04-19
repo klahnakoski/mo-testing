@@ -28,22 +28,28 @@ from mo_times import dates
 class FuzzyTestCase(unittest.TestCase):
     def __init__(self, *args, **kwargs):
         unittest.TestCase.__init__(self, *args, **kwargs)
-        self.default_places=15
-
+        self.default_places = 15
 
     def set_default_places(self, places):
         """
         WHEN COMPARING float, HOW MANY DIGITS ARE SIGNIFICANT BY DEFAULT
         """
-        self.default_places=places
+        self.default_places = places
 
-    def assertAlmostEqual(self, test_value, expected, msg=None, digits=None, places=None, delta=None):
+    def assertAlmostEqual(self, test_value, expected, *, msg=None, digits=None, places=None, delta=None):
         if delta or digits:
             assertAlmostEqual(test_value, expected, msg=msg, digits=digits, places=places, delta=delta)
         else:
-            assertAlmostEqual(test_value, expected, msg=msg, digits=digits, places=coalesce(places, self.default_places), delta=delta)
+            assertAlmostEqual(
+                test_value,
+                expected,
+                msg=msg,
+                digits=digits,
+                places=coalesce(places, self.default_places),
+                delta=delta
+            )
 
-    def assertEqual(self, test_value, expected, msg=None, digits=None, places=None, delta=None):
+    def assertEqual(self, test_value, expected, *, msg=None, digits=None, places=None, delta=None):
         self.assertAlmostEqual(test_value, expected, msg=msg, digits=digits, places=places, delta=delta)
 
     def assertRaises(self, problem=None, function=None, *args, **kwargs):
@@ -55,7 +61,6 @@ class FuzzyTestCase(unittest.TestCase):
 
 
 class RaiseContext(object):
-
     def __init__(self, testcase, problem=Exception):
         self.testcase = testcase
         self.problem = problem
@@ -75,7 +80,11 @@ class RaiseContext(object):
 
         causes = []
         for problem in problems:
-            if isinstance(problem, object.__class__) and issubclass(problem, BaseException) and isinstance(exc_val, problem):
+            if (
+                isinstance(problem, object.__class__)
+                and issubclass(problem, BaseException)
+                and isinstance(exc_val, problem)
+            ):
                 return True
             try:
                 self.testcase.assertIn(problem, f)
@@ -85,12 +94,17 @@ class RaiseContext(object):
         Log.error("problem is not raised", cause=first(causes))
 
 
-def assertAlmostEqual(test, expected, digits=None, places=None, msg=None, delta=None):
+def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, delta=None):
     """
-    COMPARE STRUCTURE AND NUMBERS!
+    COMPARE STRUCTURE AND NUMBERS
 
-    ONLY THE ATTRIBUTES IN THE expected STRUCTURE ARE TESTED TO EXIST
-    EXTRA ATTRIBUTES ARE IGNORED.
+    STRUCTURE IS COMPARED BY ...
+    * PROPERTIES IN THE expected STRUCTURE ARE TESTED TO EXIST IN test
+    * PROPERTIES IN test THAT ARE NOT FOUND IN expected ARE IGNORED
+    * IF expected IS A FUNCTION, THEN IT IS CALLED WITH test AS ARGUMENT
+    * IF expected IS A SET, THEN ORDER DOES NOT MATTER
+    * SINGLETON LIST MATCHES THE SINGLETON
+    * IF expected IS AN EMPTY LIST, THEN test MUST BE MISSING (None, or empty list)
 
     NUMBERS ARE MATCHED BY ...
     * places (UP TO GIVEN SIGNIFICANT DIGITS)
@@ -114,7 +128,14 @@ def assertAlmostEqual(test, expected, digits=None, places=None, msg=None, delta=
             for k, e in from_data(expected).items():
                 t = test.get(k)
                 try:
-                    assertAlmostEqual(t, e, msg=coalesce(msg, "")+"key "+quote(k)+": ", digits=digits, places=places, delta=delta)
+                    assertAlmostEqual(
+                        t,
+                        e,
+                        msg=coalesce(msg, "") + "key " + quote(k) + ": ",
+                        digits=digits,
+                        places=places,
+                        delta=delta,
+                    )
                 except Exception as cause:
                     Log.error("key {k}={t} does not match expected {k}={e}", k=k, t=t, e=e, cause=cause)
         elif is_data(expected):
@@ -137,13 +158,14 @@ def assertAlmostEqual(test, expected, digits=None, places=None, msg=None, delta=
             test = set(to_data(t) for t in test)
             if len(test) != len(expected):
                 Log.error(
-                    "Sets do not match, element count different:\n{{test|json|indent}}\nexpecting{{expectedtest|json|indent}}",
+                    "Sets do not match, element count"
+                    " different:\n{{test|json|indent}}\nexpecting{{expectedtest|json|indent}}",
                     test=test,
-                    expected=expected
+                    expected=expected,
                 )
 
             try:
-                if len(test|expected) != len(test):
+                if len(test | expected) != len(test):
                     raise Exception()
             except:
                 for e in expected:
@@ -155,7 +177,7 @@ def assertAlmostEqual(test, expected, digits=None, places=None, msg=None, delta=
                             pass
                     else:
                         Log.error("Sets do not match. {{value|json}} not found in {{test|json}}", value=e, test=test)
-            return   # ok
+            return  # ok
         elif isinstance(expected, types.FunctionType):
             return expected(test)
         elif hasattr(test, "__iter__") and hasattr(expected, "__iter__"):
@@ -179,7 +201,7 @@ def assertAlmostEqual(test, expected, digits=None, places=None, msg=None, delta=
             "{{test|json|limit(10000)}} does not match expected {{expected|json|limit(10000)}}",
             test=test if show_detail else "[can not show]",
             expected=expected if show_detail else "[can not show]",
-            cause=cause
+            cause=cause,
         )
 
 
@@ -200,12 +222,7 @@ def assertAlmostEqualValue(test, expected, digits=None, places=None, msg=None, d
         return
     if isinstance(expected, (dates.Date, datetime.datetime, datetime.date)):
         return assertAlmostEqualValue(
-            dates.Date(test).unix,
-            dates.Date(expected).unix,
-            msg=msg,
-            digits=digits,
-            places=places,
-            delta=delta
+            dates.Date(test).unix, dates.Date(expected).unix, msg=msg, digits=digits, places=places, delta=delta
         )
 
     if not is_many(expected) and is_list(test) and len(test) == 1:
@@ -245,7 +262,7 @@ def assertAlmostEqualValue(test, expected, digits=None, places=None, msg=None, d
 
     if digits is not None:
         with suppress_exception:
-            diff = round(abs(test-expected)*pow(10, digits))
+            diff = round(abs(test - expected) * pow(10, digits))
             if diff == 0:
                 return
 
@@ -261,7 +278,7 @@ def assertAlmostEqualValue(test, expected, digits=None, places=None, msg=None, d
 
         with suppress_exception:
             factor = mo_math.ceiling(log10(abs(test)))
-            diff = log10(abs(test-expected))-factor + places
+            diff = log10(abs(test - expected)) - factor + places
             if diff < -0.3:
                 return
 
@@ -291,8 +308,10 @@ def add_error_reporting(suite):
     This method ensures a detailed error message is logged
     :param suite: The TestCase class (as @decorator)
     """
+
     def add_handler(function):
         test_name = get_function_name(function)
+
         def error_hanlder(*args, **kwargs):
             try:
                 return function(*args, **kwargs)
