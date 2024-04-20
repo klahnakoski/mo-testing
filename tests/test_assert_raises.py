@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from mo_logs import Log
+from mo_times import Date
 
 from mo_testing.fuzzytestcase import FuzzyTestCase, add_error_reporting, assertAlmostEqual
 
@@ -126,6 +127,12 @@ class Tests(FuzzyTestCase):
     def test_ok_when_matching3(self):
         assertAlmostEqual({"a":1, "b":3.14}, [{"a":1, "b": 3.14}])
 
+    def test_ok_when_matching4(self):
+        assertAlmostEqual("test", ["test"])
+
+    def test_ok_when_matching5(self):
+        assertAlmostEqual(["test"], "test")
+
     def test_raises_when_not_matching1(self):
         @dataclass
         class Temp:
@@ -176,3 +183,19 @@ class Tests(FuzzyTestCase):
 
     def test_ok_when_missing5(self):
         assertAlmostEqual({}, {"a": NULL})
+
+    def test_ok_when_date_equal1(self):
+        assertAlmostEqual("2024-04-19", Date("2024-04-19").datetime)
+
+    def test_ok_when_date_equal2(self):
+        assertAlmostEqual(Date("2024-04-19"), "2024-04-19")
+
+    def test_ok_when_equal1(self):
+        assertAlmostEqual(5, "5")
+
+    def test_ok_when_equal2(self):
+        assertAlmostEqual("5", 5)
+
+    def test_raise_when_not_equal1(self):
+        with self.assertRaises(Exception):
+            assertAlmostEqual(6, "test")

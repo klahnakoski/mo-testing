@@ -212,23 +212,13 @@ def assertAlmostEqualValue(test, expected, digits=None, places=None, msg=None, d
         return assertAlmostEqualValue(
             dates.Date(test).unix, dates.Date(expected).unix, msg=msg, digits=digits, places=places, delta=delta
         )
-
     if is_list(test) and len(test) == 1:
-        try:
-            return assertAlmostEqual(test[0], expected, msg=msg, digits=digits, places=places, delta=delta)
-        except:
-            pass
-
+        return assertAlmostEqual(test[0], expected, msg=msg, digits=digits, places=places, delta=delta)
     if not is_number(expected):
-        # SOME SPECIAL CASES, EXPECTING EMPTY CONTAINERS IS THE SAME AS EXPECTING NULL
-        if is_list(expected) and len(expected) == 0 and test == None:
-            return
-        if is_data(expected) and not expected.keys() and test == None:
-            return
-        if test != expected:
-            raise AssertionError(expand_template("{{test|json}} != {{expected|json}}", locals()))
-        return
-    elif not is_number(test):
+        raise AssertionError(expand_template("{{test|json}} != {{expected|json}}", locals()))
+
+    expected = float(expected)
+    if not is_number(test):
         try:
             # ASSUME IT IS A UTC DATE
             test = dates.parse(test).unix
@@ -237,6 +227,8 @@ def assertAlmostEqualValue(test, expected, digits=None, places=None, msg=None, d
 
     # WE NOW ASSUME test IS A NUMBER
     test = float(test)
+    if test == expected:
+        return
 
     num_param = 0
     if digits != None:
