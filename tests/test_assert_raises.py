@@ -1,10 +1,10 @@
 from dataclasses import dataclass
+from unittest import skip, SkipTest
 
-from mo_logs import Log
+from mo_logs import Log, logger
 from mo_times import Date
 
-from mo_testing.fuzzytestcase import FuzzyTestCase, add_error_reporting, assertAlmostEqual
-
+from mo_testing.fuzzytestcase import FuzzyTestCase, add_error_reporting, assertAlmostEqual, StructuredLogger_usingList
 
 
 class NullOp:
@@ -210,3 +210,30 @@ class Tests(FuzzyTestCase):
     def test_raise_when_not_equal2(self):
         with self.assertRaises(Exception):
             assertAlmostEqual(5.0, 5.1, digits=2)
+
+    def test_raise_when_not_equal3(self):
+        with self.assertRaises(Exception):
+            assertAlmostEqual(5, 5.1, delta=0.01)
+
+    def test_add_handler(self):
+        logger.main_log, old = StructuredLogger_usingList(), logger.main_log
+
+        @add_error_reporting
+        class Test:
+            def test_for_me(self):
+                raise Exception("test")
+
+            @skip("skip me")
+            def test_to_skip(self):
+                pass
+
+        with self.assertRaises(Exception):
+            Test().test_for_me()
+
+        with self.assertRaises(SkipTest):
+            Test().test_to_skip()
+
+        lines = list(logger.main_log.lines)
+        logger.main_log = old
+        self.assertEqual(len(lines), 1)
+        self.assertIn("test_for_me failed", lines[0])
