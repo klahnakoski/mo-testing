@@ -206,23 +206,14 @@ def assertAlmostEqualValue(test, expected, digits=None, places=None, msg=None, d
     """
     Snagged from unittest/case.py, then modified (Aug2014)
     """
-    if is_null_op(expected):
-        if test == None:  # pandas dataframes reject any comparision with an exception!
-            return
-        else:
-            raise AssertionError(expand_template("{{test|json}} != NULL", locals()))
-
-    if expected == None:  # None has no expectations
-        return
     if test == expected:
-        # shortcut
         return
     if isinstance(expected, (dates.Date, datetime.datetime, datetime.date)):
         return assertAlmostEqualValue(
             dates.Date(test).unix, dates.Date(expected).unix, msg=msg, digits=digits, places=places, delta=delta
         )
 
-    if not is_many(expected) and is_list(test) and len(test) == 1:
+    if is_list(test) and len(test) == 1:
         try:
             return assertAlmostEqual(test[0], expected, msg=msg, digits=digits, places=places, delta=delta)
         except:
