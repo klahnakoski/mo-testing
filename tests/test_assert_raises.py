@@ -196,6 +196,17 @@ class Tests(FuzzyTestCase):
     def test_ok_when_equal2(self):
         assertAlmostEqual("5", 5)
 
+    def test_ok_when_equal3(self):
+        assertAlmostEqual(5, 5.01, delta=0.1)
+
+    def test_raises_when_bad_call(self):
+        with self.assertRaises(Exception):
+            assertAlmostEqual(5, 5.1, places=0, delta=0.1)
+
     def test_raise_when_not_equal1(self):
         with self.assertRaises(Exception):
             assertAlmostEqual(6, "test")
+
+    def test_raise_when_not_equal2(self):
+        with self.assertRaises(Exception):
+            assertAlmostEqual(5.0, 5.1, digits=2)

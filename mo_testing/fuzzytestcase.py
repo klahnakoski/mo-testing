@@ -20,7 +20,7 @@ from mo_dots import coalesce, is_list, literal_field, from_data, to_data, is_dat
 from mo_future import is_text, zip_longest, first, get_function_name
 from mo_logs import Except, Log, suppress_exception
 from mo_logs.strings import expand_template, quote
-from mo_math import is_number, log10
+from mo_math import is_number, log10, COUNT
 from mo_times import dates
 
 
@@ -230,14 +230,7 @@ def assertAlmostEqualValue(test, expected, digits=None, places=None, msg=None, d
     if test == expected:
         return
 
-    num_param = 0
-    if digits != None:
-        num_param += 1
-    if places != None:
-        num_param += 1
-    if delta != None:
-        num_param += 1
-    if num_param > 1:
+    if COUNT([digits, places, delta]) > 1:
         raise TypeError("specify only one of digits, places or delta")
 
     if digits is not None:
@@ -269,16 +262,6 @@ def assertAlmostEqualValue(test, expected, digits=None, places=None, msg=None, d
 
 def is_null_op(v):
     return v.__class__.__name__ == "NullOp"
-
-
-_original_assertEqual = TestCase.assertEqual
-
-
-def assertEqual(self, test, expected, *args, **kwargs):
-    return _original_assertEqual(self, expected, test, *args, **kwargs)
-
-
-TestCase.assertEqual = assertEqual
 
 
 def add_error_reporting(suite):
