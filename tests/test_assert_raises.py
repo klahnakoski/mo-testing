@@ -5,6 +5,13 @@ from mo_logs import Log
 from mo_testing.fuzzytestcase import FuzzyTestCase, add_error_reporting, assertAlmostEqual
 
 
+
+class NullOp:
+    pass
+
+NULL = NullOp()
+
+
 @add_error_reporting
 class Tests(FuzzyTestCase):
 
@@ -154,7 +161,18 @@ class Tests(FuzzyTestCase):
         with self.assertRaises(Exception):
             assertAlmostEqual([1, 2, 3], {2, 1})
 
+    def test_raise_when_not_matching5(self):
+        with self.assertRaises(Exception):
+            assertAlmostEqual([1, 2, 3], {2, 1, 4})
+
     def test_raises_when_not_raises(self):
         with self.assertRaises(Exception):
             with self.assertRaises(Exception):
                 pass
+
+    def test_raises_when_not_missing4(self):
+        with self.assertRaises(Exception):
+            assertAlmostEqual({"a":0}, {"a": NULL})
+
+    def test_ok_when_missing5(self):
+        assertAlmostEqual({}, {"a": NULL})
