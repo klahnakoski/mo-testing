@@ -48,6 +48,8 @@ class FuzzyTestCase(TestCase):
             )
 
     def assertEqual(self, test_value, expected, msg=None, *, digits=None, places=None, delta=None):
+        if expected == None:
+            expected = []
         self.assertAlmostEqual(test_value, expected, msg=msg, digits=digits, places=places, delta=delta)
 
     def assertRaises(self, problem=None, function=None, *args, **kwargs):
