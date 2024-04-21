@@ -114,7 +114,7 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
     try:
         if test is expected:
             return
-        elif test is None and (is_null_op(expected) or expected == None):
+        elif is_missing(test) and (is_null_op(expected) or expected == None):
             return
         elif is_text(expected):
             assertAlmostEqualValue(test, expected, msg=msg, digits=digits, places=places, delta=delta)
