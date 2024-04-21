@@ -234,6 +234,7 @@ class Tests(FuzzyTestCase):
             Test().test_to_skip()
 
         lines = list(logger.main_log.lines)
+        logger.stop()
         logger.main_log = old
         self.assertEqual(len(lines), 1)
         self.assertIn("test_for_me failed", lines[0])
