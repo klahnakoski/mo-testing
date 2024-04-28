@@ -14,7 +14,7 @@ import types
 from unittest import SkipTest, TestCase
 
 import mo_math
-from mo_dots import coalesce, is_list, literal_field, from_data, to_data, is_data, is_many, get_attr, is_missing
+from mo_dots import coalesce, is_list, literal_field, from_data, to_data, is_data, is_many, get_attr, is_missing, Null
 from mo_future import is_text, zip_longest, first, get_function_name
 from mo_logs import Except, Log, suppress_exception
 from mo_logs.strings import expand_template, quote
@@ -131,6 +131,8 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
             return assertAlmostEqual(test, expected[0], msg=msg, digits=digits, places=places, delta=delta)
         elif is_data(expected) and is_data(test):
             for k, e in from_data(expected).items():
+                if is_missing(k):
+                    k=Null
                 t = test.get(k)
                 try:
                     assertAlmostEqual(
