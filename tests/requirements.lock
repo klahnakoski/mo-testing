@@ -1,11 +1,12 @@
-# Tests pass with these versions 2024-04-28
+# Tests pass with python 3.8 on 2024-05-04 and with these versions
 # pip install --no-deps -r tests/requirements.lock
-mo-collections==5.608.24119
-mo-dots==9.606.24115
+mo-collections==5.623.24125
+mo-dots==10.623.24125
 mo-future==7.584.24095
 mo-imports==7.584.24095
-mo-kwargs==7.606.24115
-mo-logs==8.608.24119
-mo-math==7.606.24115
-mo-threads==6.610.24119
-mo-times==5.609.24119
+mo-kwargs==7.623.24125
+mo-logs==8.623.24125
+mo-math==7.623.24125
+mo-threads==6.623.24125
+mo-times==5.623.24125
+pytz==2024.1
