@@ -14,7 +14,8 @@ import types
 from unittest import SkipTest, TestCase
 
 import mo_math
-from mo_dots import coalesce, is_list, literal_field, from_data, to_data, is_data, is_many, get_attr, is_missing, Null
+from mo_dots import coalesce, is_list, literal_field, from_data, to_data, is_data, is_many, get_attr, is_missing, Null, \
+    is_null
 from mo_future import is_text, zip_longest, first, get_function_name
 from mo_logs import Except, Log, suppress_exception
 from mo_logs.strings import expand_template, quote
@@ -113,9 +114,11 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
     test = from_data(test)
     expected = from_data(expected)
     try:
-        if expected == None:
+        if test is expected:
             return
-        elif test is expected:
+        elif is_null(expected):
+            return
+        elif is_missing(expected) and is_missing(test):
             return
         elif is_text(expected):
             assertAlmostEqualValue(test, expected, msg=msg, digits=digits, places=places, delta=delta)
@@ -127,7 +130,7 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
                 test=test,
                 expected=expected,
             )
-        elif is_list(expected) and len(expected)==1 and not is_many(test):
+        elif is_list(expected) and len(expected)==1:
             return assertAlmostEqual(test, expected[0], msg=msg, digits=digits, places=places, delta=delta)
         elif is_data(expected) and is_data(test):
             for k, e in from_data(expected).items():
@@ -157,7 +160,9 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
                     assertAlmostEqual(t, e, msg=msg, digits=digits, places=places, delta=delta)
                 except Exception as cause:
                     Log.error("key {k}={t} does not match expected {k}={e}", k=k, t=t, e=e, cause=cause)
-        elif is_many(test) and isinstance(expected, set):
+        elif is_list(test) and len(test)==1 and is_many(test[0]) and is_many(expected):
+            return assertAlmostEqual(test[0], expected, msg=msg, digits=digits, places=places, delta=delta)
+        elif is_list(test) and isinstance(expected, set):
             test = set(to_data(t) for t in test)
             if len(test) != len(expected):
                 Log.error(

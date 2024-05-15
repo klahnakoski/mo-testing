@@ -238,3 +238,8 @@ class Tests(FuzzyTestCase):
         logger.main_log = old
         self.assertEqual(len(lines), 1)
         self.assertIn("test_for_me failed", lines[0])
+
+    def test_lists_in_lists(self):
+        self.assertEqual([[[2, 3]]], [2, 3])
+        self.assertEqual([[[2, 3]]], [[2, 3]])
+        self.assertEqual([2, 3], [[[2, 3]]])
