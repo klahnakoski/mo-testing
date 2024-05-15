@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from unittest import skip, SkipTest
 
+from mo_dots import register_many
 from mo_logs import Log, logger
 from mo_times import Date
 
@@ -14,7 +15,7 @@ NULL = NullOp()
 
 
 @add_error_reporting
-class Tests(FuzzyTestCase):
+class TestPaterns(FuzzyTestCase):
 
     def test_raises_w_nothing(self):
         with self.assertRaises():
@@ -243,3 +244,25 @@ class Tests(FuzzyTestCase):
         self.assertEqual([[[2, 3]]], [2, 3])
         self.assertEqual([[[2, 3]]], [[2, 3]])
         self.assertEqual([2, 3], [[[2, 3]]])
+
+    def test_empty_string_matches_empty_list(self):
+        assertAlmostEqual([], "")
+
+    def test_empty_list(self):
+        assertAlmostEqual(EmptyList(), [])
+        assertAlmostEqual([], EmptyList())
+        with self.assertRaises(Exception):
+            assertAlmostEqual(EmptyList(), [1])
+        with self.assertRaises(Exception):
+            assertAlmostEqual([1], EmptyList())
+
+
+class EmptyList:
+
+    def __bool__(self):
+        return False
+
+    def __data__(self):
+        return {"null": {}}
+
+register_many(EmptyList)
