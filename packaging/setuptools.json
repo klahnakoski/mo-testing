@@ -16,9 +16,6 @@
     "extras_require": {"tests": ["mo_times", "mo_logs"]},
     "include_package_data": true,
     "install_requires": [
-        "mo-collections==5.623.24125",       "mo-dots==10.623.24125",
-             "mo-future==7.584.24095",        "mo-logs==8.623.24125",
-               "mo-math==7.623.24125",     "mo-threads==6.623.24125"
     ],
     "license": "MPL 2.0",
     "long_description": {
