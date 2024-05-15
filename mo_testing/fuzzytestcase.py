@@ -132,34 +132,6 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
             )
         elif is_list(expected) and len(expected)==1:
             return assertAlmostEqual(test, expected[0], msg=msg, digits=digits, places=places, delta=delta)
-        elif is_data(expected) and is_data(test):
-            for k, e in from_data(expected).items():
-                if is_missing(k):
-                    k=Null
-                t = test.get(k)
-                try:
-                    assertAlmostEqual(
-                        t,
-                        e,
-                        msg=coalesce(msg, "") + "key " + quote(k) + ": ",
-                        digits=digits,
-                        places=places,
-                        delta=delta,
-                    )
-                except Exception as cause:
-                    Log.error("key {k}={t} does not match expected {k}={e}", k=k, t=t, e=e, cause=cause)
-        elif is_data(expected):
-            if is_many(test):
-                test = list(test)
-                if len(test) != 1:
-                    Log.error("Expecting data, not a list")
-                test = test[0]
-            for k, e in expected.items():
-                t = get_attr(test, literal_field(k))
-                try:
-                    assertAlmostEqual(t, e, msg=msg, digits=digits, places=places, delta=delta)
-                except Exception as cause:
-                    Log.error("key {k}={t} does not match expected {k}={e}", k=k, t=t, e=e, cause=cause)
         elif is_list(test) and len(test)==1 and is_many(test[0]) and is_many(expected):
             return assertAlmostEqual(test[0], expected, msg=msg, digits=digits, places=places, delta=delta)
         elif is_list(test) and isinstance(expected, set):
@@ -186,6 +158,34 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
                     else:
                         Log.error("Sets do not match. {value|json} not found in {test|json}", value=e, test=test)
             return  # ok
+        elif is_data(expected) and is_data(test):
+            for k, e in from_data(expected).items():
+                if is_missing(k):
+                    k = Null
+                t = test.get(k)
+                try:
+                    assertAlmostEqual(
+                        t,
+                        e,
+                        msg=coalesce(msg, "") + "key " + quote(k) + ": ",
+                        digits=digits,
+                        places=places,
+                        delta=delta,
+                    )
+                except Exception as cause:
+                    Log.error("key {k}={t} does not match expected {k}={e}", k=k, t=t, e=e, cause=cause)
+        elif is_data(expected):
+            if is_many(test):
+                test = list(test)
+                if len(test) != 1:
+                    Log.error("Expecting data, not a list")
+                test = test[0]
+            for k, e in expected.items():
+                t = get_attr(test, literal_field(k))
+                try:
+                    assertAlmostEqual(t, e, msg=msg, digits=digits, places=places, delta=delta)
+                except Exception as cause:
+                    Log.error("key {k}={t} does not match expected {k}={e}", k=k, t=t, e=e, cause=cause)
         elif isinstance(expected, types.FunctionType):
             return expected(test)
         elif hasattr(test, "__iter__") and hasattr(expected, "__iter__"):
