@@ -15,5 +15,5 @@ setup(
     name='mo-testing',
     packages=["mo_testing"],
     url='https://github.com/klahnakoski/mo-testing',
-    version='8.632.24139'
+    version='8.633.24139'
 )
