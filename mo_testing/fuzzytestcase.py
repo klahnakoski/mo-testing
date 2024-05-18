@@ -235,6 +235,7 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
                 expected = []  # REPRESENT NOTHING
             for t, e in zip_longest(test, expected):
                 assertAlmostEqual(t, e, msg=msg, digits=digits, places=places, delta=delta)
+            return
         except Exception as cause:
             first_cause = first_cause or cause
     try:

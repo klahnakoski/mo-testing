@@ -260,6 +260,9 @@ class TestPaterns(FuzzyTestCase):
         assertAlmostEqual(ListAndData(), {"name":"world"})
         assertAlmostEqual(ListAndData(), ["hello"])
 
+    def test_list_and_list(self):
+        assertAlmostEqual(["a", "b", None], ["a", "b", ""])
+
 
 class EmptyList:
 
