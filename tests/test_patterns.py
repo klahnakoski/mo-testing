@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from unittest import skip, SkipTest
 
-from mo_dots import register_many
+from mo_dots import register_many, register_list, register_data
 from mo_logs import Log, logger
 from mo_times import Date
 
@@ -41,15 +41,15 @@ class TestPaterns(FuzzyTestCase):
 
     def test_raises_when_different1(self):
         with self.assertRaises(Exception):
-            assertAlmostEqual(1, 0.1, 6)
+            assertAlmostEqual(1, 0.1, places=6)
 
     def test_raises_when_different2(self):
         with self.assertRaises(Exception):
-            assertAlmostEqual(1.000001, 1.000002, 6)
+            assertAlmostEqual(1.000001, 1.000002, digits=6)
 
     def test_raises_when_different3(self):
         with self.assertRaises(Exception):
-            assertAlmostEqual(1.000001, 1.0000016, 6)
+            assertAlmostEqual(1.000001, 1.0000016, digits=6)
 
     def test_raises_when_different4(self):
         with self.assertRaises(Exception):
@@ -256,6 +256,10 @@ class TestPaterns(FuzzyTestCase):
         with self.assertRaises(Exception):
             assertAlmostEqual([1], EmptyList())
 
+    def test_list_and_data(self):
+        assertAlmostEqual(ListAndData(), {"name":"world"})
+        assertAlmostEqual(ListAndData(), ["hello"])
+
 
 class EmptyList:
 
@@ -266,3 +270,26 @@ class EmptyList:
         return {"null": {}}
 
 register_many(EmptyList)
+
+class ListAndData:
+    def __len__(self):
+        return 1
+
+    def __getitem__(self, item):
+        if item == 0:
+            return ["hello"]
+        return ["world"]
+
+    def __iter__(self):
+        yield "hello"
+
+    def get(self, item):
+        if item == 0:
+            return ["hello"]
+        return ["world"]
+
+
+register_list(ListAndData)
+register_data(ListAndData)
+
+

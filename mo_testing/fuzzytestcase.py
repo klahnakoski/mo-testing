@@ -132,9 +132,24 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
             )
         elif is_list(expected) and len(expected)==1:
             return assertAlmostEqual(test, expected[0], msg=msg, digits=digits, places=places, delta=delta)
-        elif is_list(test) and len(test)==1 and is_many(test[0]) and is_many(expected):
+    except Exception as cause:
+        Log.error(
+            "{test|json|limit(10000)} does not match expected {expected|json|limit(10000)}",
+            test=test,
+            expected=expected,
+            cause=cause,
+        )
+
+
+    first_cause = None
+    if is_list(test) and len(test)==1 and is_many(test[0]) and is_many(expected):
+        try:
             return assertAlmostEqual(test[0], expected, msg=msg, digits=digits, places=places, delta=delta)
-        elif is_list(test) and isinstance(expected, set):
+        except Exception as cause:
+            first_cause = cause
+
+    if is_list(test) and isinstance(expected, set):
+        try:
             test = set(to_data(t) for t in test)
             if len(test) != len(expected):
                 Log.error(
@@ -158,7 +173,11 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
                     else:
                         Log.error("Sets do not match. {value|json} not found in {test|json}", value=e, test=test)
             return  # ok
-        elif is_data(expected) and is_data(test):
+        except Exception as cause:
+            first_cause = first_cause or cause
+
+    if is_data(expected) and is_data(test):
+        try:
             for k, e in from_data(expected).items():
                 if is_missing(k):
                     k = Null
@@ -174,7 +193,12 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
                     )
                 except Exception as cause:
                     Log.error("key {k}={t} does not match expected {k}={e}", k=k, t=t, e=e, cause=cause)
-        elif is_data(expected):
+            return
+        except Exception as cause:
+            first_cause = first_cause or cause
+
+    if is_data(expected):
+        try:
             if is_many(test):
                 test = list(test)
                 if len(test) != 1:
@@ -186,9 +210,18 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
                     assertAlmostEqual(t, e, msg=msg, digits=digits, places=places, delta=delta)
                 except Exception as cause:
                     Log.error("key {k}={t} does not match expected {k}={e}", k=k, t=t, e=e, cause=cause)
-        elif isinstance(expected, types.FunctionType):
+            return
+        except Exception as cause:
+            first_cause = first_cause or cause
+
+    if isinstance(expected, types.FunctionType):
+        try:
             return expected(test)
-        elif hasattr(test, "__iter__") and hasattr(expected, "__iter__"):
+        except Exception as cause:
+            first_cause = first_cause or cause
+
+    if hasattr(test, "__iter__") and hasattr(expected, "__iter__"):
+        try:
             if test.__class__.__name__ == "ndarray":  # numpy
                 test = test.tolist()
             elif test.__class__.__name__ == "DataFrame":  # pandas
@@ -202,15 +235,19 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
                 expected = []  # REPRESENT NOTHING
             for t, e in zip_longest(test, expected):
                 assertAlmostEqual(t, e, msg=msg, digits=digits, places=places, delta=delta)
-        else:
-            assertAlmostEqualValue(test, expected, msg=msg, digits=digits, places=places, delta=delta)
+        except Exception as cause:
+            first_cause = first_cause or cause
+    try:
+        return assertAlmostEqualValue(test, expected, msg=msg, digits=digits, places=places, delta=delta)
     except Exception as cause:
-        Log.error(
-            "{test|json|limit(10000)} does not match expected {expected|json|limit(10000)}",
-            test=test,
-            expected=expected,
-            cause=cause,
-        )
+        first_cause = first_cause or cause
+
+    Log.error(
+        "{test|json|limit(10000)} does not match expected {expected|json|limit(10000)}",
+        test=test,
+        expected=expected,
+        cause=first_cause,
+    )
 
 
 def assertAlmostEqualValue(test, expected, digits=None, places=None, msg=None, delta=None):
