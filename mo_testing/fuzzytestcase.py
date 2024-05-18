@@ -149,32 +149,29 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
             first_cause = cause
 
     if is_list(test) and isinstance(expected, set):
-        try:
-            test = set(to_data(t) for t in test)
-            if len(test) != len(expected):
-                Log.error(
-                    "Sets do not match, element count"
-                    " different:\n{test|json|indent}\nexpecting{expectedtest|json|indent}",
-                    test=test,
-                    expected=expected,
-                )
+        test = set(to_data(t) for t in test)
+        if len(test) != len(expected):
+            Log.error(
+                "Sets do not match, element count"
+                " different:\n{test|json|indent}\nexpecting{expectedtest|json|indent}",
+                test=test,
+                expected=expected,
+            )
 
-            try:
-                if len(test | expected) != len(test):
-                    raise Exception()
-            except:
-                for e in expected:
-                    for t in test:
-                        try:
-                            assertAlmostEqual(t, e, msg=msg, digits=digits, places=places, delta=delta)
-                            break
-                        except Exception as _:
-                            pass
-                    else:
-                        Log.error("Sets do not match. {value|json} not found in {test|json}", value=e, test=test)
-            return  # ok
-        except Exception as cause:
-            first_cause = first_cause or cause
+        try:
+            if len(test | expected) != len(test):
+                raise Exception()
+        except:
+            for e in expected:
+                for t in test:
+                    try:
+                        assertAlmostEqual(t, e, msg=msg, digits=digits, places=places, delta=delta)
+                        break
+                    except Exception as _:
+                        pass
+                else:
+                    Log.error("Sets do not match. {value|json} not found in {test|json}", value=e, test=test)
+        return  # ok
 
     if is_data(expected) and is_data(test):
         try:
@@ -220,7 +217,7 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
         except Exception as cause:
             first_cause = first_cause or cause
 
-    if hasattr(test, "__iter__") and hasattr(expected, "__iter__"):
+    if is_many(test) and is_many(expected):
         try:
             if test.__class__.__name__ == "ndarray":  # numpy
                 test = test.tolist()
