@@ -112,6 +112,8 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
     * delta (MAXIMUM ABSOLUTE DIFFERENCE FROM expected)
     """
     test = from_data(test)
+    if is_many(test) and not is_list(test):
+        Log.error("can not accept generators as test value")
     expected = from_data(expected)
     try:
         if test is expected:
