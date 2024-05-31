@@ -148,7 +148,7 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
         except Exception as cause:
             first_cause = cause
 
-    if is_list(test) and isinstance(expected, set):
+    if is_many(test) and isinstance(expected, set):
         test = set(to_data(t) for t in test)
         if len(test) != len(expected):
             Log.error(
