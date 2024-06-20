@@ -15,8 +15,8 @@ from unittest import SkipTest, TestCase
 
 import mo_math
 from mo_dots import coalesce, is_list, literal_field, from_data, to_data, is_data, is_many, get_attr, is_missing, Null, \
-    is_null
-from mo_future import is_text, zip_longest, first, get_function_name
+    is_null, is_finite
+from mo_future import is_text, zip_longest, first, get_function_name, generator_types
 from mo_logs import Except, Log, suppress_exception
 from mo_logs.strings import expand_template, quote
 from mo_math import is_number, log10, COUNT
@@ -112,6 +112,8 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
     * delta (MAXIMUM ABSOLUTE DIFFERENCE FROM expected)
     """
     test = from_data(test)
+    if isinstance(test, generator_types):
+        Log.error("can not accept generators as test value")
     expected = from_data(expected)
     try:
         if test is expected:
@@ -258,8 +260,8 @@ def assertAlmostEqualValue(test, expected, digits=None, places=None, msg=None, d
         return assertAlmostEqualValue(
             dates.Date(test).unix, dates.Date(expected).unix, msg=msg, digits=digits, places=places, delta=delta
         )
-    if is_list(test) and len(test) == 1:
-        return assertAlmostEqual(test[0], expected, msg=msg, digits=digits, places=places, delta=delta)
+    if is_finite(test) and len(test) == 1:
+        return assertAlmostEqual(first(test), expected, msg=msg, digits=digits, places=places, delta=delta)
     if not is_number(expected):
         raise AssertionError(expand_template("{test|json} != {expected|json}", locals()))
 
