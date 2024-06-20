@@ -260,8 +260,8 @@ def assertAlmostEqualValue(test, expected, digits=None, places=None, msg=None, d
         return assertAlmostEqualValue(
             dates.Date(test).unix, dates.Date(expected).unix, msg=msg, digits=digits, places=places, delta=delta
         )
-    if is_list(test) and len(test) == 1:
-        return assertAlmostEqual(test[0], expected, msg=msg, digits=digits, places=places, delta=delta)
+    if is_finite(test) and len(test) == 1:
+        return assertAlmostEqual(first(test), expected, msg=msg, digits=digits, places=places, delta=delta)
     if not is_number(expected):
         raise AssertionError(expand_template("{test|json} != {expected|json}", locals()))
 
