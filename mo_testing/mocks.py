@@ -1,32 +1,5 @@
 from mo_logs import logger
-
-
-def mockable(enable):
-    """
-    FUNCTION DECORATOR TO ALLOW MOCKING THIS FUNCTION
-    :param enable:
-    :return:
-    """
-    if isinstance(enable, bool):
-
-        def decorator(func):
-            if enable:
-                return Mockable(func)
-            else:
-                return func
-
-        return decorator
-
-    # ALLOW FUNCTION TO BE CALLED AS A DECORATOR
-    return Mockable(enable)
-
-
-class Mockable:
-    def __init__(self, func):
-        self.func = func
-
-    def __call__(self, *args, **kwargs):
-        return self.func(*args, **kwargs)
+from mo_future import Mockable, mockable
 
 
 def mock(mockable, *, value=None, function=None):
