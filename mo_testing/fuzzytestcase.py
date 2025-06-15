@@ -15,8 +15,20 @@ import types
 from unittest import SkipTest, TestCase
 
 import mo_math
-from mo_dots import coalesce, is_list, literal_field, from_data, to_data, is_data, is_many, get_attr, is_missing, Null, \
-    is_null, is_finite
+from mo_dots import (
+    coalesce,
+    is_list,
+    literal_field,
+    from_data,
+    to_data,
+    is_data,
+    is_many,
+    get_attr,
+    is_missing,
+    Null,
+    is_null,
+    is_finite,
+)
 from mo_future import is_text, zip_longest, first, get_function_name, generator_types
 from mo_logs import Except, Log, suppress_exception
 from mo_logs.strings import expand_template, quote
@@ -43,12 +55,7 @@ class FuzzyTestCase(TestCase):
             assertAlmostEqual(test_value, expected, msg=msg, digits=digits, places=places, delta=delta)
         else:
             assertAlmostEqual(
-                test_value,
-                expected,
-                msg=msg,
-                digits=digits,
-                places=coalesce(places, self.default_places),
-                delta=delta
+                test_value, expected, msg=msg, digits=digits, places=coalesce(places, self.default_places), delta=delta
             )
 
     def assertEqual(self, test_value, expected, msg=None, *, digits=None, places=None, delta=None):
@@ -64,7 +71,7 @@ class FuzzyTestCase(TestCase):
             function(*args, **kwargs)
 
 
-class RaiseContext(object):
+class RaiseContext:
     def __init__(self, testcase, problem=Exception):
         self.testcase = testcase
         self.problem = problem
@@ -132,11 +139,9 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
             if is_missing(test):
                 return
             Log.error(
-                "{test|json|limit(10000)} is expected to not exist",
-                test=test,
-                expected=expected,
+                "{test|json|limit(10000)} is expected to not exist", test=test, expected=expected,
             )
-        elif is_list(expected) and len(expected)==1:
+        elif is_list(expected) and len(expected) == 1:
             return assertAlmostEqual(test, expected[0], msg=msg, digits=digits, places=places, delta=delta)
     except Exception as cause:
         Log.error(
@@ -146,9 +151,8 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
             cause=cause,
         )
 
-
     first_cause = None
-    if is_list(test) and len(test)==1 and is_many(test[0]) and is_many(expected):
+    if is_list(test) and len(test) == 1 and is_many(test[0]) and is_many(expected):
         try:
             return assertAlmostEqual(test[0], expected, msg=msg, digits=digits, places=places, delta=delta)
         except Exception as cause:
@@ -158,8 +162,7 @@ def assertAlmostEqual(test, expected, *, digits=None, places=None, msg=None, del
         test = set(to_data(t) for t in test)
         if len(test) != len(expected):
             Log.error(
-                "Sets do not match, element count"
-                " different:\n{test|json|indent}\nexpecting{expectedtest|json|indent}",
+                "Sets do not match, element count different:\n{test|json|indent}\nexpecting{expectedtest|json|indent}",
                 test=test,
                 expected=expected,
             )
@@ -349,7 +352,7 @@ def add_error_reporting(suite):
     return suite
 
 
-class StructuredLogger_usingList(object):
+class StructuredLogger_usingList:
     def __init__(self):
         self.lines = []
 
